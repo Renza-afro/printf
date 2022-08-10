@@ -33,6 +33,7 @@ free(copy);
 }
 }
 else
+{
 inv->error = 1;
 }
 free(binary);

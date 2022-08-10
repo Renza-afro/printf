@@ -20,7 +20,7 @@ int base;
 base = (format[count] == 'u') ? DECIMAL : HEX;
 n = va_arg(args, uint64_t);
 unsignedNumberToString(n, base, buffer, format[count], flag);
-return (print_string(buffer, flag, 1));
+return (p_rev_string(buffer, flag, 1));
 }
 
 /**
