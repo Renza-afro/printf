@@ -31,9 +31,7 @@ copy[j] = binary[i];
 puts_buffer(inv, copy);
 free(copy);
 }
-}
 else
-{
 inv->error = 1;
 }
 free(binary);
