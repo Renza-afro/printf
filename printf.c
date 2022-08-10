@@ -3,79 +3,53 @@
 #include <stdint.h>
 
 
-/**
-* _printf - function to print output to the console
-* @format: pointer to the list of arguemant passed to the function
-*
-* Return: bytes of element printed out, -1 on error
-*/
 
+/* ------------------------------ */ 
+
+/**
+* _printf - replication of some of the features from C function printf()
+* @format: character string of directives, flags, modifiers, & specifiers
+* Description: This function uses the variable arguments functionality and is
+* supposed to resemble printf().  Please review the README for more
+* information on how it works.
+* Return: number of characters printed
+*/
 int _printf(const char *format, ...)
 {
-int returnValue, val;
-va_list args;
+va_list args_list;
+inventory_t *inv;
+void (*temp_func)(inventory_t *);
 
-va_start(args, format);
-if (format == NULL)
+if (!format)
 return (-1);
-if (format[0] == '%' && format[1] == '\0')
-return (-1);
-val = _vprintf(format, args);
-va_end(args);
+va_start(args_list, format);
+inv = build_inventory(&args_list, format);
 
-(returnValue) = val;
-return (returnValue);
-}
-
-/**
-* _vprintf - helper function for printf, takes the arguement passed to printf,
-*				and does the actual printing
-* @format: pointer to the list of arguement passed to printf to be printd
-* @args: place holder for the arguement passed of type va_list
-*
-* Return: bytes of element printed, -1 if no parameter is supplied
-*/
-
-int _vprintf(const char *format, va_list args)
+while (inv && format[inv->i] && !inv->error)
 {
-int state = 0, flag[6] = {0, 0, 0, 0, 0, 0}, is_long = 0, is_short = 0;
-int count = 0, print_count = 0, identifier_printed, reset = 1;
-int *resetPtr = &reset, *ptr = &is_long, *shortPtr = &is_short, tmp_count;
-
-while (format[count])
-{
-if (state == 0)
-{
-if (format[count] == '%')
-state = 1;
+inv->c0 = format[inv->i];
+if (inv->c0 != '%')
+write_buffer(inv);
 else
 {
-print_count += _putchar(format[count]);
-}
-count++;
+parse_specifiers(inv);
+temp_func = match_specifier(inv);
+if (temp_func)
+temp_func(inv);
+else if (inv->c1)
+{
+if (inv->flag)
+inv->flag = 0;
+write_buffer(inv);
 }
 else
 {
-if (isAlpha(format[count]) || format[count] == '%')
-{
-identifier_printed = format_specifier(count, format, args,
-resetPtr, ptr, shortPtr,  flag);
-if (reset == 1)
-{
-state = is_long = is_short = 0;
-}
-else
-reset = 1;
-count++;
-}
-else
-{
-tmp_count = setFlags(format, flag, count, args);
-count += tmp_count;
-}
-print_count += identifier_printed;
+if (inv->space)
+inv->buffer[--(inv->buf_index)] = '\0';
+inv->error = 1;
 }
 }
-va_end(args);
-return (print_count);
+inv->i++;
+}
+return (end_func(inv));
 }
