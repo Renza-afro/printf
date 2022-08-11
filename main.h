@@ -1,26 +1,11 @@
 #ifndef MAIN_H
 #define MAIN_H
-#include <unistd.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
 
-#define DECIMAL 10
-#define HEX 16
-#define OCTAL 8
-#define BINARY 2
-
-/* *********************************** */
-
-/* begin standard C header files */
 #include <stdlib.h>
 #include <stdarg.h>
 #include <unistd.h>
 #include <limits.h>
 #include <stdio.h>
-
-/* macros */
 
 #define BUFSIZE 1024
 #define TRUE (1 == 1)
